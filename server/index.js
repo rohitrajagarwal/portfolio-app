@@ -100,7 +100,76 @@ app.get('/api/home', (req, res) => {
 });
 
 app.get('/api/project', (req, res) => {
-    // 
+
+    // looks for page_number in the query string. if not found set default to 1. 
+    const pageNumber = parseInt(req.query.page_number) || 1;
+    const pageSize = 10; // Number of items per page
+    const startIndex = (pageNumber - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    // write code to fetch data from mysql database where project table name is project
+    const fs = require('fs');
+    const path = require('path');
+    const mysql = require('mysql2');
+
+    // Read config file
+    const configPath = path.join(__dirname, 'sql_config', 'sql_connection.config');
+    const configContent = fs.readFileSync(configPath, 'utf8');
+
+    // Parse config file
+    const config = {};
+    configContent.split('\n').forEach(line => {
+    const [key, value] = line.split('=');
+    if (key && value) config[key.trim()] = value.trim();
+    });
+
+
+    // Create MySQL connection
+    const connection = mysql.createConnection({
+    host: config.DB_HOST,
+    user: config.DB_USER,
+    password: config.DB_PASSWORD,
+    database: config.DB_NAME
+    });
+
+    const query = ' SELECT \
+                        project.project_id \
+                        , project.short_desc\
+                        , project.long_desc\
+                        , images.image_name\
+                        , user.user_firstname\
+                        , user.user_lastname\
+                        , user.user_middlename\
+                        , user.user_email \
+                    FROM \
+                        project \
+                        ,project_team \
+                        ,user \
+                        ,images \
+                    WHERE \
+                        project.project_id = project_team.project_id \
+                        AND images.image_id = project.project_image_id \
+                        AND project.project_id=project_team.project_id \
+                    LIMIT ' + pageSize + ' OFFSET ' + startIndex;
+    
+    // this query will return or more rows. Each row corresponding to the project team member. 
+    connection.query(query, (error, results) => {
+    if (error) {
+        res.status(500).json({ error: 'ERROR: 10002: Database error. Contact rohitrajagarwal@gmail.com with error code.' });
+    } else {
+        console.log(results);
+        results.forEach(row => {
+        if (row.image) {
+            row.image = row.image.toString('base64');
+        }
+        });
+        res.json(results);
+    }
+
+
+
+    connection.end(); // Close the connection after the query
+    });
 });
 
 app.get('/api/test', (req, res) => {

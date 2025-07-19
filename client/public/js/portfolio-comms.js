@@ -17,6 +17,14 @@ function isInViewport(el) {
   );
 }
 
+function showInfoBox(message) {
+    const infoBox = document.getElementById('customInfoBox');
+    const infoBoxMessage = document.getElementById('infoBoxMessage');
+    infoBoxMessage.textContent = message;
+    infoBox.style.display = 'flex'; // Make it visible
+}
+
+
 function handleFlyIn() {
   // Select all main-content-body elements
   const mainBodies = document.querySelectorAll('.main-content-body');

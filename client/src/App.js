@@ -1,27 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import Container from './components/Container.js'; 
-
+import React, { useState } from 'react';
+import Container from './components/HomeComponents/Container.js'; 
+import IllegalURLMsg from './components/IllegalURLMsg.js';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProjectMain from './components/ProjectComponents/ProjectMain.js';
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    //console.log("Fetching data from server...");
-    fetch('api/home')
-      .then(res => res.json())
-      .then(data => {
-        //console.log("Data received from server: ", data);
-          setMessage(data);
-      });
-  }, []);
-  
-
-  //console.log("In App component, message: ", message);
+  //const isAuthenticated = true; // Replace with your actual authentication logic
 
   return (
-    <Container className="main-content" mainpage_components={message}>
-    
-    </Container>
+    <Routes>
+      <Route path="/" element={<Container />} />
+      <Route path="/home" element={<Container />} />
+      <Route path="/project" element={<ProjectMain />} />
+      <Route path="/contact" element={<Container />} />
+      <Route path="*" element={<IllegalURLMsg />} /> {/* Catch-all for undefined routes */}
+    </Routes>
   );
 }
 
-export default App
+export default App;

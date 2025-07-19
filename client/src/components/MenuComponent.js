@@ -3,15 +3,15 @@ import React from 'react';
 function MenuComponent() {
   return (
         <div className="menu">
-            <div className="btn">
-                <a href="/">Home</a>
-            </div>
-            <div className="btn">
-                <a href="/api/projects">Projects</a>
-            </div>
-            <div className="btn">
-                <a href="/api/contact">Contact</a>
-            </div>
+            <a href="/home">
+                <div className="btn">Home</div>
+            </a>
+            <a href="/project">
+                <div className="btn">Projects</div>
+            </a>
+            <a href="/contact">
+                <div className="btn">Contact</div>
+            </a>
         </div>
   );
 }

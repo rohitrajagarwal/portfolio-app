@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import MainContentSubcomponent from './MainContentSubcomponent.js';
+import MainContentSubcomponent from './MainContentSubcomponent';
 
 function MainContentBody({ index, content }) {
   const ref = useRef();

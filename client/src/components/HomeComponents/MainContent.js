@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import MainContentBody from './MainContentBody.js';
+import MainContentBody from './MainContentBody';
 
 
 function MainContent({content}) {

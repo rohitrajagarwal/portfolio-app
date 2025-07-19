@@ -144,6 +144,46 @@ p {
   border-radius: 10px;
 }
 
+.projectimg {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-shadow: 10px 10px 10px rgba(0,0,0,0.50);
+  overflow:hidden;
+  border-radius: 10px;
+}
+
+.projectimg img {
+  width: 100%;
+  height: auto;
+  overflow:hidden;
+  border-radius: 10px;
+}
+
+#customInfoBox {
+    position: fixed;
+    z-index: 1000; /* Ensure it's on top of other content */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-box-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
 @media (max-width: 768px) {
   /* convert menu to a collabpsible menu at this width */
   .menu {
@@ -161,7 +201,7 @@ p {
   .main-content-body {
    width: 100%;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-top: 2em;
@@ -221,7 +261,7 @@ p {
   .main-content-body {
     width: 100%;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-top: 2em;
