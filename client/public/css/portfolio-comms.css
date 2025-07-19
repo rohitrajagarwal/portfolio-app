@@ -1,0 +1,246 @@
+body {
+  margin: 0;
+  font-family: 'Montserrat', Arial, sans-serif;
+  background: linear-gradient(120deg, #C2A98B 50%, #425766 50%);
+  color: #2A373F;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 80%;
+  box-shadow: 6px 6px 20px rgba(0,0,0,0.50);
+  margin: 1% auto;
+  background: #F1E7CC;
+  border-radius: 16px;
+  padding: 40px 32px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #425766;
+}
+
+p {
+  color: #2A373F;
+  font-size: 1.2rem; 
+  line-height: 1.6;
+  margin: 0px;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 2em;
+  flex-wrap: wrap;
+  border-radius: 8px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #2A373F;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 32px;
+  color: #2A373F;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+  cursor: pointer;
+  border-bottom: 5px solid #2A373F;
+}
+
+.btn:hover {
+  background: #2A373F;
+  color: #F1E7CC;
+}
+
+.btn:hover > a {
+  text-decoration: none;
+  color: #F1E7CC;
+}
+
+
+.main-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2em;
+}
+
+.fly-in {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+
+.fly-in-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+
+.main-content-body {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 50px;
+  gap: 30px;
+  margin-top: 50px;
+  border-radius: 10px;
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+.main-content-body.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sub-component-small{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  text-align: center;
+  background:#425766;
+  border-radius: 10px;
+  padding-left:10px;
+  padding-right:10px;
+  box-shadow: 10px 10px 10px rgba(0,0,0,0.50);
+
+}
+.sub-component-large {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  text-align: center;
+  /*background:#425766;*/
+  border-radius: 10px;
+}
+
+.sub-component-large {
+  height: 100%;
+  display: flex;
+  flex-direction : column;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  text-align: center;
+  /*background:#425766;*/
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  /* convert menu to a collabpsible menu at this width */
+  .menu {
+    flex-direction: column;
+    align-items: center;
+  }
+  .main-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2em;
+  }
+
+  .main-content-body {
+   width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2em;
+    opacity: 0;
+    gap: 30px;
+  }
+  .sub-component-small {
+    width: 95%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #425766;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.50);
+  }
+  .sub-component-large {
+    width: 98%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /*background:#425766;*/
+    border-radius: 10px;
+  }
+  .menu {
+    flex-direction: column;
+    align-items: center;
+  }
+  .btn {
+    width: 78%;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .container {
+    padding: 24px 16px;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  .btn {
+    padding: 10px 24px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .menu {
+    flex-direction: column;
+    align-items: center;
+  }
+  .main-content-body {
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2em;
+    opacity: 0;
+    gap: 30px;
+  }
+  .sub-component-small {
+    width: 90%
+  }
+  .btn {
+    width: 78%;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .container {
+    min-width: 300px;
+    padding: 24px 8px;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+}
