@@ -6,32 +6,6 @@ const fs = require('fs');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-/*app.get('/api/home', (req, res) => {
-    console.log(path.join(__dirname, 'public', 'html', 'home.html'));
-    // Paths to your HTML snippets
-    const topPath = path.join(__dirname, 'public', 'html', 'page-commons-top.html');
-    const homePath = path.join(__dirname, 'public', 'html', 'home.html');
-    const bottomPath = path.join(__dirname, 'public', 'html', 'page-commons-bottom.html');
-    // Check if the files exist
-    if (!fs.existsSync(topPath) || !fs.existsSync(homePath) || !fs.existsSync(bottomPath)) {
-        return res.status(404).send('Internal Server Error: Contact rohitrajagarwal@gmail.com with Error Code: 10001');
-    // Read and combine the files
-    }
-    // Error Code: 10001 - Internal Server Error will be reported if anything goes wrong with this module. 
-    try {
-        const topHtml = fs.readFileSync(topPath, 'utf8');
-        const homeHtml = fs.readFileSync(homePath, 'utf8');
-        const bottomHtml = fs.readFileSync(bottomPath, 'utf8');
-        const fullHtml = topHtml + homeHtml + bottomHtml;
-        
-        res.send(fullHtml);
-    } catch (err) {
-        res.status(500).send('Error loading page');
-    }
-
-});
-
-*/
 
 app.get('/api/home', (req, res) => {
     const jsonData = {
@@ -110,7 +84,7 @@ app.get('/api/project', (req, res) => {
     // write code to fetch data from mysql database where project table name is project
     const fs = require('fs');
     const path = require('path');
-    const mysql = require('mysql2');
+    const mariadb = require('mariadb');
 
     // Read config file
     const configPath = path.join(__dirname, 'sql_config', 'sql_connection.config');
@@ -125,7 +99,7 @@ app.get('/api/project', (req, res) => {
 
 
     // Create MySQL connection
-    const connection = mysql.createConnection({
+    const pool = mariadb.createPool({
     host: config.DB_HOST,
     user: config.DB_USER,
     password: config.DB_PASSWORD,
@@ -152,23 +126,28 @@ app.get('/api/project', (req, res) => {
                         AND project.project_id=project_team.project_id \
                     LIMIT ' + pageSize + ' OFFSET ' + startIndex;
     
-    // this query will return or more rows. Each row corresponding to the project team member. 
-    connection.query(query, (error, results) => {
-    if (error) {
-        res.status(500).json({ error: 'ERROR: 10002: Database error. Contact rohitrajagarwal@gmail.com with error code.' });
-    } else {
-        console.log(results);
-        results.forEach(row => {
-        if (row.image) {
-            row.image = row.image.toString('base64');
-        }
-        });
-        res.json(results);
-    }
 
-
-
-    connection.end(); // Close the connection after the query
+    pool.getConnection()
+        .then(conn => {
+            return conn.query(query)
+            .then(results => {
+                console.log(results);
+                results.forEach(row => {
+                if (row.image) {
+                    row.image = row.image.toString('base64');
+                }
+                });
+                res.json(results);
+                conn.end();
+            })
+            .catch(err => {
+                // handle error
+                conn.end();
+            });
+        })
+        .catch(err => {
+            console.log('ERROR:10003: Database connection error. Contact rohitrajagarwal@gmail.com with error code.')
+            conn.end();
     });
 });
 
