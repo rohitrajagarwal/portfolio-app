@@ -147,7 +147,7 @@ app.get('/api/project', (req, res) => {
         })
         .catch(err => {
             console.log('ERROR:10003: Database connection error. Contact rohitrajagarwal@gmail.com with error code.')
-            conn.end();
+            //conn.end();
     });
 });
 
