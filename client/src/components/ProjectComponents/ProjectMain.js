@@ -18,10 +18,10 @@ function ProjectMain() {
           });
       }, []);
       
-    //console.log("Mainpage components in Container: ", mainpage_components);
+    //console.log("ProjectMain.js: ", message);
     return (
         <div className="container">
-            <MenuComponent /> 
+            <MenuComponent currentPage="project" /> 
             <ProjectAll content={message} />
             <FooterComponent/> 
         </div>

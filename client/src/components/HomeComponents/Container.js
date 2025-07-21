@@ -21,7 +21,7 @@ function Container() {
     //console.log("Mainpage components in Container: ", mainpage_components);
     return (
         <div className="container">
-            <MenuComponent /> 
+            <MenuComponent currentPage="home" /> 
             <MainContent content={message} />
             <FooterComponent/> 
         </div>

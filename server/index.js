@@ -5,7 +5,27 @@ const PORT = 3002;
 const fs = require('fs');
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
+const mariadb = require('mariadb');
+
+// Read config file
+const configPath = path.join(__dirname, 'sql_config', 'sql_connection.config');
+
+const configContent = fs.readFileSync(configPath, 'utf8');
+const config = {};
+configContent.split('\n').forEach(line => {
+    const [key, value] = line.split('=');
+    if (key && value) config[key.trim()] = value.trim();
+});
+
+// Create MySQL connection
+const pool = mariadb.createPool({
+    host: config.DB_HOST,
+    user: config.DB_USER,
+    password: config.DB_PASSWORD,
+    database: config.DB_NAME
+});
 
 app.get('/api/home', (req, res) => {
     const jsonData = {
@@ -73,133 +93,97 @@ app.get('/api/home', (req, res) => {
     res.json(jsonData);
 });
 
-app.get('/api/project', (req, res) => {
+app.get('/api/project', async (req, res) => {
 
     // looks for page_number in the query string. if not found set default to 1. 
     const pageNumber = parseInt(req.query.page_number) || 1;
     const pageSize = 10; // Number of items per page
     const startIndex = (pageNumber - 1) * pageSize;
     const endIndex = startIndex + pageSize;
+   
+    // Optimized query: fetch all projects and their team members in one go
+    const optimizedQuery = `
+        SELECT 
+            p.project_id as id,
+            p.short_desc as short_desc,
+            p.long_desc as long_desc,
+            i.image_name as image_name,
+            u.user_firstname,
+            u.user_middlename,
+            u.user_lastname
+        FROM project p
+        JOIN images i ON p.project_image_id = i.image_id
+        LEFT JOIN project_team pt ON p.project_id = pt.project_id
+        LEFT JOIN user u ON pt.team_member_id = u.user_id
+        ORDER BY p.project_id DESC
+        LIMIT ${pageSize} OFFSET ${startIndex} 
+    `;
 
-    // write code to fetch data from mysql database where project table name is project
-    const fs = require('fs');
-    const path = require('path');
-    const mariadb = require('mariadb');
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const results = await conn.query(optimizedQuery);
 
-    // Read config file
-    const configPath = path.join(__dirname, 'sql_config', 'sql_connection.config');
-    const configContent = fs.readFileSync(configPath, 'utf8');
-
-    // Parse config file
-    const config = {};
-    configContent.split('\n').forEach(line => {
-    const [key, value] = line.split('=');
-    if (key && value) config[key.trim()] = value.trim();
-    });
-
-
-    // Create MySQL connection
-    const pool = mariadb.createPool({
-    host: config.DB_HOST,
-    user: config.DB_USER,
-    password: config.DB_PASSWORD,
-    database: config.DB_NAME
-    });
-
-    const query = ' SELECT \
-                        project.project_id \
-                        , project.short_desc\
-                        , project.long_desc\
-                        , images.image_name\
-                        , user.user_firstname\
-                        , user.user_lastname\
-                        , user.user_middlename\
-                        , user.user_email \
-                    FROM \
-                        project \
-                        ,project_team \
-                        ,user \
-                        ,images \
-                    WHERE \
-                        project.project_id = project_team.project_id \
-                        AND images.image_id = project.project_image_id \
-                        AND project.project_id=project_team.project_id \
-                    LIMIT ' + pageSize + ' OFFSET ' + startIndex;
-    
-
-    pool.getConnection()
-        .then(conn => {
-            return conn.query(query)
-            .then(results => {
-                console.log(results);
-                results.forEach(row => {
-                if (row.image) {
-                    row.image = row.image.toString('base64');
-                }
-                });
-                res.json(results);
-                conn.end();
-            })
-            .catch(err => {
-                // handle error
-                conn.end();
-            });
-        })
-        .catch(err => {
-            console.log('ERROR:10003: Database connection error. Contact rohitrajagarwal@gmail.com with error code.')
-            //conn.end();
-    });
+        // Group results by project
+        const projectMap = {};
+        results.forEach(row => {
+            if (!projectMap[row.id]) {
+                projectMap[row.id] = {
+                    id: row.id,
+                    short_desc: row.short_desc,
+                    long_desc: row.long_desc,
+                    image_name: row.image_name,
+                    team_members: []
+                };
+            }
+            // Only add team member if there is a user
+            if (row.user_firstname || row.user_middlename || row.user_lastname) {
+                const name = [row.user_firstname, row.user_middlename, row.user_lastname].filter(Boolean).join(' ');
+                projectMap[row.id].team_members.push(name);
+            }
+        });
+        // Convert map to array and join team members as comma separated string
+        const projectList = Object.values(projectMap).map(project => {
+            return {
+                ...project,
+                team_members: project.team_members.join(', ')
+            };
+        });
+        res.json({ project_list: projectList });
+    } catch (err) {
+        console.error('Database query error:', err);
+        res.status(500).json({ error: 'Database query error' });
+    } finally {
+        if (conn) conn.end();
+        //pool.end(); // Close the pool when done
+    }
 });
 
-app.get('/api/test', (req, res) => {
-    const jsonData = {
-                    "homepage": [
-                        {
-                        "mainpage_component" : [
-                            {
-                            "content": "headshot.png",
-                            "type": "image",
-                            "isHeader": "true"
-                            },
-                            {
-                            "content": "adfasdfasdfasdf",
-                            "type": "text",
-                            "isHeader": "true"
-                            }
-                        ]
-                        },
-                        {
-                        "mainpage_component" : [
-                            {
-                            "content": "career_path.png",
-                            "type": "image",
-                            "isHeader": "false"
-                            },
-                            {
-                            "content": "qwerqwerqwerqwer",
-                            "type": "text",
-                            "isHeader": "false"
-                            }
-                        ]
-                        
-                        },
-                        {
-                        "mainpage_component" : [
-                            {
-                            "content": "career_path.png",
-                            "type": "image",
-                            "isHeader": "false"
-                            },
-                            {
-                            "content": "qwerqwerqwerqwer",
-                            "type": "text",
-                            "isHeader": "false"
-                            }
-                        ]
-                        }
-                    ]
-                    }
-    res.json(jsonData);
+app.post('/api/submit-contact', async (req, res) => {
+    
+    // Handle contact form submission logic here based on the form defined in ContactForm.js
+    // save the contact details to the database
+
+    // debug log
+    //console.log("Contact form submission received:", req.body);
+    const { name, email, message } = req.body; // Assuming you are using JSON body for simplicity
+    if (!name || !email || !message) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    // add logic to save name, email and message to the database, make sure to sanitize the data before saving
+    // use a prepared statement to prevent SQL injection
+    const insertQuery = `INSERT INTO contact_form (contact_name, contact_email, contact_message) VALUES (?, ?, ?)`;
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        await conn.query(insertQuery, [name, email, message]);
+        res.status(200).json({ message: 'Contact form submitted successfully' });
+    } catch (err) {
+        console.error('Error inserting contact form:', err);
+        res.status(500).json({ error: 'Error submitting contact form' });
+    } finally {
+        if (conn) conn.end();
+    }
 });
 
 

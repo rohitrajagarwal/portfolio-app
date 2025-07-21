@@ -31,7 +31,7 @@ p {
 .menu {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 40px;
   margin-bottom: 2em;
   flex-wrap: wrap;
   border-radius: 8px;
@@ -55,6 +55,22 @@ p {
   cursor: pointer;
   border-bottom: 5px solid #2A373F;
 }
+
+.active-indicator {
+  display: inline-block;
+  padding: 12px 32px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+  cursor: pointer;
+  border-bottom: 5px solid #2A373F;
+  background-color: #2A373F;
+  color: #eddeab;
+  border-radius: 10px;
+  text-align: center;
+  }
 
 .btn:hover {
   background: #2A373F;
@@ -118,7 +134,6 @@ p {
   border-radius: 10px;
   padding-left:10px;
   padding-right:10px;
-  box-shadow: 10px 10px 10px rgba(0,0,0,0.50);
 
 }
 .sub-component-large {
@@ -151,8 +166,9 @@ p {
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-shadow: 10px 10px 10px rgba(0,0,0,0.50);
+  /*box-shadow: 10px 10px 10px rgba(0,0,0,0.50);*/
   overflow:hidden;
+  background: #eddeab;
   border-radius: 10px;
 }
 
@@ -161,6 +177,7 @@ p {
   height: auto;
   overflow:hidden;
   border-radius: 10px;
+  
 }
 
 #customInfoBox {
@@ -184,9 +201,83 @@ p {
     text-align: center;
 }
 
-@media (max-width: 768px) {
+.project_details{
+    padding: 20px;
+    background: #eddeab;
+    text-align: justify;
+    border-radius: 10px;
+  }
+
+  .contact_form {
+    display: flex;
+    height: 50%;
+    min-height:50%;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: #F1E7CC;
+    border-radius: 10px;
+  }
+
+  form {
+    width: 70%;
+    margin-top: 10px;
+    margin-bottom: 100px;
+  }
+  input{
+    width: 80%;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #2A373F;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-shadow: 0px 5px 5px rgba(0,0,0, 0.5);
+    margin-bottom:10px;
+    margin-top:10px
+  }
+  textarea{
+    width: 80%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #2A373F;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-shadow: 0px 5px 5px rgba(0,0,0, 0.5);
+    resize: vertical;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: 1rem;
+    color: #888; /* Optional: change placeholder color */
+    font-style: italic; /* Optional: make placeholder italic */
+  }
+  form > button {
+    padding: 10px;
+    width: 40%;
+    height: 60px;
+    background: #2A373F;
+    color:  #F1E7CC;
+    font-size: large;
+    font-family: 'Montserrat', Arial, sans-serif;
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px rgba(0,0,0, 0.5);
+
+  }
+  .form_sub_status {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #34c65b
+  }
+  
+@media (max-width: 920px) {
   /* convert menu to a collabpsible menu at this width */
   .menu {
+    gap: 20px;
     flex-direction: column;
     align-items: center;
   }
@@ -232,14 +323,50 @@ p {
     /*background:#425766;*/
     border-radius: 10px;
   }
+
+  .project_details{
+    width:95%;
+    height: 100%;
+    flex:1;
+    word-wrap: wrap;
+    overflow-wrap: break-word;
+    /*padding: 20px;*/  
+    background: #eddeab;
+    text-align: justify;
+    border-radius: 10px;
+  }
+  .projectimg {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /*box-shadow: 10px 10px 10px rgba(0,0,0,0.50);*/
+    overflow:hidden;
+    background: #eddeab;
+    border-radius: 10px;
+  }
+
+  .projectimg img {
+    width: 100%;
+    height: auto;
+    overflow:hidden;
+    border-radius: 10px;
+  
+  }
   .menu {
     flex-direction: column;
     align-items: center;
   }
   .btn {
-    width: 78%;
     text-align: center;
     margin-bottom: 8px;
+  }
+  .btn:hover{
+    text-align: center;
+    /*margin-bottom: 8px;*/
+
   }
   .container {
     padding: 24px 16px;
@@ -248,7 +375,6 @@ p {
     font-size: 2rem;
   }
   .btn {
-    padding: 10px 24px;
     font-size: 0.9rem;
   }
 }
@@ -269,10 +395,31 @@ p {
     gap: 30px;
   }
   .sub-component-small {
-    width: 90%
+    width: 95%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #425766;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.50);
+  }
+  .sub-component-large {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /*background:#425766;*/
+    border-radius: 10px;
   }
   .btn {
-    width: 78%;
+
     text-align: center;
     margin-bottom: 8px;
   }
