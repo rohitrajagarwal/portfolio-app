@@ -41,7 +41,7 @@ function Container() {
         });
 
       // Quote pop-up logic
-      const today = new Date('2025-01-08').toISOString().slice(0, 10); // YYYY-MM-DD
+      const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
       const lastShown = localStorage.getItem('quotePopupLastShown');
 
       if (lastShown !== today) {
