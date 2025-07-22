@@ -25,6 +25,12 @@ function ContactForm() {
   const [messageError, setMessageError] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
 
+  // Captcha state
+  const [captchaNum1, setCaptchaNum1] = useState(() => Math.floor(Math.random() * 10) + 1);
+  const [captchaNum2, setCaptchaNum2] = useState(() => Math.floor(Math.random() * 10) + 1);
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaError, setCaptchaError] = useState(false);
+
   const maxMessageLength = 300;
 
   const handleMessageChange = (e) => {
@@ -35,10 +41,28 @@ function ContactForm() {
     setMessageError(value.length > 0 && !pattern.test(value));
   };
 
+  const handleCaptchaChange = (e) => {
+    setCaptchaInput(e.target.value);
+    setCaptchaError(false);
+  };
+
+  const regenerateCaptcha = () => {
+    setCaptchaNum1(Math.floor(Math.random() * 10) + 1);
+    setCaptchaNum2(Math.floor(Math.random() * 10) + 1);
+    setCaptchaInput('');
+    setCaptchaError(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (nameError || emailError || !name || !email || !message) {
       setSubmitStatus('Please fill all fields correctly.');
+      return;
+    }
+    // Validate captcha
+    if (parseInt(captchaInput, 10) !== captchaNum1 + captchaNum2) {
+      setCaptchaError(true);
+      setSubmitStatus('Captcha validation failed.');
       return;
     }
     try {
@@ -49,6 +73,7 @@ function ContactForm() {
       });
       if (response.ok) {
         setSubmitStatus('Message sent successfully!');
+        regenerateCaptcha();
       } else {
         setSubmitStatus('Failed to send message.');
       }
@@ -63,47 +88,70 @@ function ContactForm() {
       <p>We would love to hear from you! Please fill out the form below:</p>
       <form onSubmit={handleSubmit}>
         <input
+          name="name"
           type="text"
           placeholder="Your Name"
           value={name}
           onChange={handleNameChange}
-          style={{ border: nameError ? '2px solid red' : undefined }}
+          className={nameError ? 'form-error-border' : ''}
         />
         {nameError && (
-          <div style={{ color: 'red', fontSize: '0.9em' }}>
+          <div className="form-error-message">
             Please enter only letters and spaces.
           </div>
         )}
         <br />
         <input
+          name="email"
           type="email"
           placeholder="Your Email"
           value={email}
           onChange={handleEmailChange}
-          style={{ border: emailError ? '2px solid red' : undefined }}
+          className={emailError ? 'form-error-border' : ''}
         />
         <br />
         {emailError && (
-          <div style={{ color: 'red', fontSize: '0.9em' }}>
+          <div className="form-error-message">
             Please enter a valid email address.
           </div>
         )}
         <textarea
+          name="message"
           maxLength={maxMessageLength}
           placeholder="Your Message. Please limit your message to under 300 characters."
           value={message}
           onChange={handleMessageChange}
-          style={{ border: messageError ? '2px solid red' : undefined }}
+          className={messageError ? 'form-error-border' : ''}
         />
-        <div style={{ fontSize: '0.9em', marginTop: '4px' }}>
+        <div className="character-counter">
           {message.length} / {maxMessageLength} characters
         </div>
         {messageError && (
-          <div style={{ color: 'red', fontSize: '0.9em' }}>
+          <div className="form-error-message">
             Please enter only valid characters (letters, numbers, spaces, and common punctuation).
           </div>
         )}
         <br />
+        {/* Captcha Section */}
+        <div className="captcha-container">
+          <label htmlFor="captcha" className="captcha-label">
+            What is {captchaNum1} + {captchaNum2}?
+          </label>
+          <input
+            id="captcha"
+            type="text"
+            value={captchaInput}
+            onChange={handleCaptchaChange}
+            className={`captcha-input ${captchaError ? 'form-error-border' : ''}`}
+            autoComplete="off"
+          />
+          <button type="button" onClick={regenerateCaptcha} className="captcha-refresh-btn">↻</button>
+          {captchaError && (
+            <div className="form-error-message">
+              Incorrect answer. Please try again.
+            </div>
+          )}
+        </div>
         <br />
         <button type="submit" disabled={submitStatus === 'Message sent successfully!'}>Send Message</button>
         {submitStatus && <div className="form_sub_status">{submitStatus}</div>}

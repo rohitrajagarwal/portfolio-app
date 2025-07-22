@@ -273,6 +273,59 @@ p {
     font-weight: bold;
     color: #34c65b
   }
+
+  /* Form validation styles */
+  .form-error-border {
+    border: 2px solid red !important;
+  }
+
+  .form-error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 4px;
+  }
+
+  .character-counter {
+    font-size: 0.9em;
+    margin-top: 4px;
+    color: #666;
+  }
+
+  .captcha-container {
+    margin: 1em 0;
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .captcha-label {
+    font-weight: bold;
+    margin-right: 0.5em;
+  }
+
+  .captcha-input {
+    width: 60px;
+    margin-right: 0.5em;
+    padding: 8px;
+    border: 1px solid #2A373F;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+
+  .captcha-refresh-btn {
+    font-size: 0.9em;
+    padding: 0.2em 0.7em;
+    border-radius: 4px;
+    border: none;
+    background: #eee;
+    cursor: pointer;
+  }
+
+  .captcha-refresh-btn:hover {
+    background: #ddd;
+  }
   .quote-popup-overlay {
   position: fixed;
   top: 0;

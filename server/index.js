@@ -1,13 +1,87 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const PORT = 3002;
+const PORT = 3000;
 const fs = require('fs');
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files from React build
+app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(express.json());
 
 const mariadb = require('mariadb');
+
+// Input validation middleware
+const validateContactForm = (req, res, next) => {
+    const { name, email, message } = req.body;
+    
+    // Check if all fields are present
+    if (!name || !email || !message) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    
+    // Validate name (only letters and spaces, 2-50 characters)
+    const namePattern = /^[A-Za-z\s]{2,50}$/;
+    if (!namePattern.test(name.trim())) {
+        return res.status(400).json({ error: 'Name must contain only letters and spaces (2-50 characters)' });
+    }
+    
+    // Validate email
+    const emailPattern = /^[\w-.]+@[\w-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(email.trim())) {
+        return res.status(400).json({ error: 'Please enter a valid email address' });
+    }
+    
+    // Validate message (300 characters max, allow letters, numbers, spaces, and common punctuation)
+    const messagePattern = /^[A-Za-z0-9\s.,!?@#\$%&*()\-_'";:]{1,300}$/;
+    if (!messagePattern.test(message.trim())) {
+        return res.status(400).json({ error: 'Message contains invalid characters or exceeds 300 characters' });
+    }
+    
+    // Sanitize inputs by trimming whitespace
+    req.body.name = name.trim();
+    req.body.email = email.trim().toLowerCase();
+    req.body.message = message.trim();
+    
+    next();
+};
+
+// Rate limiting middleware (simple implementation)
+const requestCounts = new Map();
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const MAX_REQUESTS = 5; // Max 5 contact form submissions per 15 minutes
+
+const rateLimitContactForm = (req, res, next) => {
+    const clientIp = req.ip || req.connection.remoteAddress;
+    const now = Date.now();
+    
+    if (!requestCounts.has(clientIp)) {
+        requestCounts.set(clientIp, []);
+    }
+    
+    const requests = requestCounts.get(clientIp);
+    // Filter out old requests
+    const recentRequests = requests.filter(time => now - time < RATE_LIMIT_WINDOW);
+    
+    if (recentRequests.length >= MAX_REQUESTS) {
+        return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+    }
+    
+    recentRequests.push(now);
+    requestCounts.set(clientIp, recentRequests);
+    
+    next();
+};
+
+// Pagination validation middleware
+const validatePagination = (req, res, next) => {
+    const pageNumber = parseInt(req.query.page_number);
+    
+    if (req.query.page_number && (isNaN(pageNumber) || pageNumber < 1 || pageNumber > 1000)) {
+        return res.status(400).json({ error: 'Invalid page number. Must be between 1 and 1000.' });
+    }
+    
+    next();
+};
 
 // Read config file
 const configPath = path.join(__dirname, 'sql_config', 'sql_connection.config');
@@ -93,7 +167,7 @@ app.get('/api/home', (req, res) => {
     res.json(jsonData);
 });
 
-app.get('/api/project', async (req, res) => {
+app.get('/api/project', validatePagination, async (req, res) => {
 
     // looks for page_number in the query string. if not found set default to 1. 
     const pageNumber = parseInt(req.query.page_number) || 1;
@@ -159,17 +233,15 @@ app.get('/api/project', async (req, res) => {
     }
 });
 
-app.post('/api/submit-contact', async (req, res) => {
+app.post('/api/submit-contact', rateLimitContactForm, validateContactForm, async (req, res) => {
     
     // Handle contact form submission logic here based on the form defined in ContactForm.js
     // save the contact details to the database
 
     // debug log
     //console.log("Contact form submission received:", req.body);
-    const { name, email, message } = req.body; // Assuming you are using JSON body for simplicity
-    if (!name || !email || !message) {
-        return res.status(400).json({ error: 'All fields are required' });
-    }
+    const { name, email, message } = req.body; // Data is already validated and sanitized by middleware
+    
     // add logic to save name, email and message to the database, make sure to sanitize the data before saving
     // use a prepared statement to prevent SQL injection
     const insertQuery = `INSERT INTO contact_form (contact_name, contact_email, contact_message) VALUES (?, ?, ?)`;
@@ -186,6 +258,11 @@ app.post('/api/submit-contact', async (req, res) => {
     }
 });
 
+// Catch-all handler: send back React's index.html file for client-side routing
+// Only for non-API routes
+app.get(/^(?!\/api).*/, (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

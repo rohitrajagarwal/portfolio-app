@@ -10,7 +10,7 @@ function MainContentBody({ index, content }) {
     }
   }, []);
 
-  console.log("MaintContentBody.js: index value: ", index);
+  //console.log("MaintContentBody.js: index value: ", index);
   return (
     <div className="main-content-body" ref={ref}> 
       {index % 2 === 0 ? (

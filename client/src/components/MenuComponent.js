@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 //import portfolio-comms.css
 
 function MenuComponent({ currentPage }) {
@@ -6,32 +7,26 @@ function MenuComponent({ currentPage }) {
         <div className="menu">
 
             {currentPage === 'home' ?
-                <a href="#">
-                    <div className="active-indicator">Home</div>
-                </a>
+                <div className="active-indicator">Home</div>
                 :
-                <a href="/">
+                <Link to="/">
                     <div className="btn">Home</div>
-                </a>
+                </Link>
             }
 
             {currentPage === 'project' ?
-                <a href="#">
-                    <div className="active-indicator">Projects</div>
-                </a>
+                <div className="active-indicator">Projects</div>
                 :
-                <a href="/project">
+                <Link to="/project">
                     <div className="btn">Projects</div>
-                </a>
+                </Link>
             }
             {currentPage === 'contact' ?
-                <a href="#">
-                    <div className="active-indicator">Contact</div>
-                </a>
+                <div className="active-indicator">Contact</div>
                 :
-                <a href="/contact">
+                <Link to="/contact">
                     <div className="btn">Contact</div>
-                </a>
+                </Link>
             }
         </div>
   );
