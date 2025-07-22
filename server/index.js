@@ -113,9 +113,9 @@ app.get('/api/home', (req, res) => {
                             },
                             {
                             "content": {"heading": "Rohit Agarwal", "para":"I am a designer<br/>\
-                                                                                a developer<br/>\
-                                                                                a program manager<br/>\
-                                                                                a leader <br/>\
+                                                                                ...a developer<br/>\
+                                                                                ...a program manager<br/>\
+                                                                                ...a leader <br/>\
                                                                                 ... with 11+ years of IT industry experience."},
                             "type": "text",
                             "isHeader": "true"

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function ContactForm() {
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState(false);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const handleNameChange = (e) => {
     const value = e.target.value;
@@ -30,6 +31,23 @@ function ContactForm() {
   const [captchaNum2, setCaptchaNum2] = useState(() => Math.floor(Math.random() * 10) + 1);
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaError, setCaptchaError] = useState(false);
+
+  // Function to check screen size
+  const checkScreenSize = () => {
+    setIsMobile(window.innerWidth <= 600);
+  };
+
+  // Effect to handle screen size changes
+  useEffect(() => {
+    // Check initial screen size
+    checkScreenSize();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkScreenSize);
+    
+    // Cleanup event listener on component unmount
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   const maxMessageLength = 300;
 
@@ -85,7 +103,7 @@ function ContactForm() {
   return (
     <div className="contact_form">
       <h2>Contact Us</h2>
-      <p>We would love to hear from you! Please fill out the form below:</p>
+      <p>Iwould love to hear from you! Please fill out the form below:</p>
       <form onSubmit={handleSubmit}>
         <input
           name="name"
@@ -153,7 +171,9 @@ function ContactForm() {
           )}
         </div>
         <br />
-        <button type="submit" disabled={submitStatus === 'Message sent successfully!'}>Send Message</button>
+        <button type="submit" disabled={submitStatus === 'Message sent successfully!'}>
+          {isMobile ? 'Send' : 'Send Message'}
+        </button>
         {submitStatus && <div className="form_sub_status">{submitStatus}</div>}
       </form>
     </div>
