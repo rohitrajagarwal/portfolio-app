@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-//import portfolio-comms.css
+import '../styles/menu.css';
 
 function MenuComponent({ currentPage }) {
   const [showQuote, setShowQuote] = useState(false);
@@ -22,7 +22,7 @@ function MenuComponent({ currentPage }) {
 
   useEffect(() => {
     // Quote pop-up logic
-    const today = new Date('2025-01-12').toISOString().slice(0, 10); // YYYY-MM-DD
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
     const lastShown = localStorage.getItem('quotePopupLastShown');
 
     if (lastShown !== today) {
@@ -72,6 +72,13 @@ function MenuComponent({ currentPage }) {
                 :
                 <Link to="/project">
                     <div className="btn">Projects</div>
+                </Link>
+            }
+             {currentPage === 'education' ?
+                <div className="active-indicator">Education</div>
+                :
+                <Link to="/education">
+                    <div className="btn">Education</div>
                 </Link>
             }
             {currentPage === 'contact' ?

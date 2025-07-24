@@ -98,7 +98,12 @@ const pool = mariadb.createPool({
     host: config.DB_HOST,
     user: config.DB_USER,
     password: config.DB_PASSWORD,
-    database: config.DB_NAME
+    database: config.DB_NAME,
+    connectionLimit: parseInt(config.CONN_LIMIT) || 10,
+    acquireTimeout: parseInt(config.ACQ_TIMEOUT) || 60000,
+    timeout: parseInt(config.TIMEOUT) || 60000,
+    allowPublicKeyRetrieval: config.ALLOW_PK_RETREIVAL === 'true',
+    ssl: config.SSL === 'true' ? true : false
 });
 
 app.get('/api/home', (req, res) => {
@@ -112,7 +117,7 @@ app.get('/api/home', (req, res) => {
                             "isHeader": "true"
                             },
                             {
-                            "content": {"heading": "Rohit Agarwal", "para":"I am a designer<br/>\
+                            "content": {"heading": "Rohit Agarwal", "para":"I am a designer...<br/>\
                                                                                 ...a developer<br/>\
                                                                                 ...a program manager<br/>\
                                                                                 ...a leader <br/>\
@@ -164,6 +169,73 @@ app.get('/api/home', (req, res) => {
                         }
                     ]
                     }
+    res.json(jsonData);
+});
+app.get('/api/education', (req, res) => {
+    const jsonData = {
+      "education": [
+         {
+            "degree": "Master of Science in Information Systems",
+            "institution": "Santa Clara University",
+            "location": "Santa Clara, CA",
+            "start": "January 2025",
+            "end": "present",
+            "courses": [
+               { "course_id": 1, 
+                 "course_title": "Information Systems Strategy and Management",
+                 "course_skills": ["Strategic Planning", "IT Management", "Business Analysis"]},
+               { "course_id": 2, 
+                 "course_title": "Object Oriented Programming with Java", 
+                 "course_skills": ["Java", "OOP Principles", "Software Development", "JavaFX"]},
+               { "course_id": 3, 
+                 "course_title": "Cloud Computing Architecture", 
+                 "course_skills": ["Cloud Architecture", "AWS", "Azure", "Google Cloud"]},
+               { "course_id": 4, 
+                 "course_title": "Database Management Systems", 
+                 "course_skills": ["SQL", "Database Design", "Data Modeling", "MySQL"]},
+               { "course_id": 5, 
+                 "course_title": "Database Management Systems Analysis and Design", 
+                 "course_skills": ["Database Design", "Entity Relationship Diagram","Normalization"]},
+               { "course_id": 6, 
+                 "course_title": "Information Systems Analysis and Design", 
+                 "course_skills": ["Systems Analysis", "Design Thinking", "Agile Methodologies", "UML Diagrams"]},
+            ]
+         },
+         {
+            "degree": "Bachelor of Engineering in Information Science",
+            "institution": "Bangalore University",
+            "location": "Bangalore, India",
+            "start": "August 2009",
+            "end": "July 2013",
+            "courses": [
+               { "course_id": 1, 
+                 "course_title": "Computer Networks",
+                 "course_description": "This course covers the fundamentals of computer networks, including protocols, architecture, and security.",
+                 "course_skills": ["Networking", "TCP/IP", "Network Security", "OSI Model"]},
+               { "course_id": 2, 
+                 "course_title": "Object Oriented Programming with Java", 
+                 "course_description": "This course introduces the concepts of object-oriented programming using Java.",
+                 "course_skills": ["Java", "OOP Principles", "Software Development", "JavaFX"]},
+               { "course_id": 3, 
+                 "course_title": "Computer Architecture and Organization", 
+                 "course_description": "This course explores the principles of computer architecture and organization.",
+                 "course_skills": ["Computer Architecture", "Assembly Language", "Microprocessors", "Memory Management"]},
+               { "course_id": 4, 
+                 "course_title": "Database Management Systems", 
+                 "course_description": "This course covers the fundamentals of database management systems and SQL.",
+                 "course_skills": ["SQL", "Database Design", "Data Modeling", "MySQL"]},
+               { "course_id": 5, 
+                 "course_title": "Database Management Systems Analysis and Design", 
+                 "course_description": "This course focuses on the analysis and design of database systems.",
+                 "course_skills": ["Database Design", "Entity Relationship Diagram","Normalization"]},
+               { "course_id": 6, 
+                 "course_title": "Programming in C", 
+                 "course_description": "This course covers the fundamentals of programming in C.",
+                 "course_skills": ["C Programming", "Data Structures", "Algorithms", "Memory Management"]},
+            ]
+         }
+      ]
+    }
     res.json(jsonData);
 });
 

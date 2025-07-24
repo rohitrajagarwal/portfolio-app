@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../../styles/contact.css';
 
 function ContactForm() {
   const [name, setName] = useState('');
@@ -103,7 +104,7 @@ function ContactForm() {
   return (
     <div className="contact_form">
       <h2>Contact Us</h2>
-      <p>Iwould love to hear from you! Please fill out the form below:</p>
+      <p>I would love to hear from you! Please fill out the form below:</p>
       <form onSubmit={handleSubmit}>
         <input
           name="name"

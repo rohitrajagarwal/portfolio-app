@@ -1,0 +1,159 @@
+/* Menu Component Styles */
+.menu {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 2em;
+  flex-wrap: wrap;
+  border-radius: 8px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #2A373F;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 32px;
+  color: #2A373F;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+  cursor: pointer;
+  border-bottom: 5px solid #2A373F;
+}
+
+.active-indicator {
+  display: inline-block;
+  padding: 12px 32px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+  cursor: pointer;
+  border-bottom: 5px solid #2A373F;
+  background-color: #2A373F;
+  color: #eddeab;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.btn:hover {
+  background: #2A373F;
+  color: #F1E7CC;
+}
+
+.btn:hover > a {
+  text-decoration: none;
+  color: #F1E7CC;
+}
+
+/* Quote popup styles */
+.quote-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.quote-popup {
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+  padding: 2.5em 2em 2em 2em;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(60,60,120,0.18);
+  max-width: 90vw;
+  min-width: 320px;
+  text-align: center;
+  position: relative;
+  border: 1px solid #e0e7ff;
+}
+
+.quote-popup-close {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  background: transparent;
+  border: none;
+  font-size: 1.5em;
+  color: #425766;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.quote-popup-icon {
+  font-size: 2.5em;
+  color: #6366f1;
+  margin-bottom: 0.3em;
+  line-height: 1;
+  font-family: serif;
+  user-select: none;
+}
+
+.quote-popup-text {
+  font-size: 1.25em;
+  font-weight: 500;
+  color: #425766;
+  margin-bottom: 2.5em;
+  font-family: Montserrat, Arial, sans-serif;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 2px #e0e7ff;
+  font-style: italic;
+  min-height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quote-popup-author {
+  position: absolute;
+  right: 2em;
+  bottom: 1.2em;
+  font-size: 1.25em;
+  color: #425766;
+  font-family: Montserrat, Arial, sans-serif;
+  font-weight: bold;
+  opacity: 0.85;
+}
+
+/* Menu responsive styles */
+@media (max-width: 920px) {
+  .menu {
+    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .btn:hover{
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .menu {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+}

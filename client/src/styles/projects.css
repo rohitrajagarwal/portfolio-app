@@ -1,0 +1,244 @@
+/* Project Component Styles */
+.projectimg {
+  min-width: 80px;
+  margin-right: 1em;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.project_details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex-grow: 1;
+}
+
+.project-title {
+  color: #425766;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.project-description {
+  color: #5a6c7d;
+  line-height: 1.6;
+  margin-bottom: 0.8em;
+}
+
+.project-description-section {
+  border-radius: 12px;
+  margin-bottom: 1.5em;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: flex-start;
+}
+
+.project-tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 1em;
+}
+
+.tech-tag {
+  background: #6366f1;
+  color: white;
+  padding: 0.3em 0.8em;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.tech-tag:hover {
+  background: #4f46e5;
+}
+
+.project-links {
+  display: flex;
+  gap: 1em;
+  margin-top: 1em;
+}
+
+.project-link {
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5em 1em;
+  border: 2px solid #C2A98B;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-size: 0.9em;
+}
+
+.project-link:hover {
+  background: #6366f1;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.project-expand-section {
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: 2px solid #C2A98B;
+}
+
+.project-expand-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5em 0;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.project-expand-header:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.project-expand-text {
+  color: #6366f1;
+  font-weight: 600;
+  margin-right: 0.5em;
+  font-size: 0.95em;
+}
+
+.project-description-text {
+  color: #5a6c7d;
+  line-height: 1.7;
+  margin-top: 0.8em;
+  padding: 1em;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  border-left: 3px solid #C2A98B;
+}
+
+/* Project description toggle and container styles */
+.project-description-toggle {
+  color: #425766;
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+  padding: 0.5em;
+  border-radius: 6px;
+}
+
+.project-description-toggle:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.project-description-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+.project-description-container.expanded {
+  max-height: 1000px;
+  opacity: 1;
+  width:100%;
+}
+
+/* Show project description toggle only on mobile */
+@media (min-width: 921px) {
+  .project-description-section {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+  }
+  
+  .project-description-toggle {
+    display: none;
+  }
+  
+  .project-description-container {
+    max-height: none;
+    opacity: 1;
+    overflow: visible;
+  }
+}
+
+/* Project responsive styles */
+@media (max-width: 920px) {
+  .project-description-section {
+    padding: 1.2em;
+    margin-bottom: 1.2em;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .projectimg {
+    width: 50%;
+    height: auto;
+  }
+
+  .project-tech-stack {
+    gap: 0.4em;
+  }
+
+  .tech-tag {
+    font-size: 0.8em;
+    padding: 0.25em 0.7em;
+  }
+
+  .project-links {
+    gap: 0.8em;
+  }
+
+  .project-link {
+    font-size: 0.85em;
+    padding: 0.4em 0.8em;
+  }
+}
+
+@media (max-width: 600px) {
+  .project-description-section {
+    padding: 1em;
+    margin-bottom: 1em;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .projectimg {
+    width: 65%;
+    height: auto;
+    margin-right: 0;
+    margin-bottom: 0.8em;
+  }
+
+  .project_details {
+    width: 100%;
+  }
+
+  .project-title {
+    font-size: 1em;
+  }
+
+  .tech-tag {
+    font-size: 0.75em;
+    padding: 0.2em 0.6em;
+  }
+
+  .project-links {
+    flex-direction: column;
+    gap: 0.6em;
+  }
+
+  .project-link {
+    text-align: center;
+    font-size: 0.8em;
+  }
+}

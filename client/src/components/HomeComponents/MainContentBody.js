@@ -6,24 +6,18 @@ function MainContentBody({ index, content }) {
 
   useEffect(() => {
     if (ref.current) {
-      ref.current.classList.add('visible');
+      // Add sequential delay based on index (500ms between each section)
+      setTimeout(() => {
+        ref.current.classList.add('visible');
+      }, index * 500);
     }
-  }, []);
+  }, [index]);
 
   //console.log("MaintContentBody.js: index value: ", index);
   return (
     <div className="main-content-body" ref={ref}> 
-      {index % 2 === 0 ? (
-          <>
               <MainContentSubcomponent content={content.mainpage_component[0]} />
               <MainContentSubcomponent content={content.mainpage_component[1]} />
-          </>
-      ) : (
-          <>
-              <MainContentSubcomponent content={content.mainpage_component[1]} />
-              <MainContentSubcomponent content={content.mainpage_component[0]} />
-          </>
-      )}
     </div> 
   );
 }

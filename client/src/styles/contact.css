@@ -1,0 +1,339 @@
+/* Contact Component Styles */
+.contact_form {
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 12px;
+  border: 2px solid #C2A98B;
+  padding: 2em;
+}
+
+.contact_form h2 {
+  color: #425766;
+  margin-bottom: 1.5em;
+  text-align: center;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.5em;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5em;
+  color: #425766;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8em 1em;
+  border: 2px solid #e0e7ff;
+  border-radius: 8px;
+  font-size: 1em;
+  font-family: inherit;
+  background: white;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+/* Direct input and textarea styles for forms not using .form-group wrapper */
+form input {
+  width: 80%;
+  height: 40px;
+  padding: 10px;
+  border: 1px solid #2A373F;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-shadow: 0px 5px 5px rgba(0,0,0, 0.5);
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+form textarea {
+  width: 80%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #2A373F;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-shadow: 0px 5px 5px rgba(0,0,0, 0.5);
+  resize: vertical;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+form input::placeholder,
+form textarea::placeholder {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 1rem;
+  color: #888;
+  font-style: italic;
+}
+
+form > button {
+  padding: 10px;
+  width: 40%;
+  height: 60px;
+  background: #2A373F;
+  color: #F1E7CC;
+  font-size: large;
+  font-family: 'Montserrat', Arial, sans-serif;
+  border-radius: 10px;
+  box-shadow: 0px 10px 10px rgba(0,0,0, 0.5);
+  border: none;
+  cursor: pointer;
+}
+
+.form_sub_status {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #34c65b;
+}
+
+/* Form validation styles for direct elements */
+.form-error-border {
+  border: 2px solid red !important;
+}
+
+.form-error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 4px;
+}
+
+.character-counter {
+  font-size: 0.9em;
+  margin-top: 4px;
+  color: #666;
+}
+
+.form-error {
+  color: #dc2626;
+  font-size: 0.85em;
+  margin-top: 0.5em;
+  font-weight: 500;
+}
+
+.form-success {
+  color: #059669;
+  font-size: 0.9em;
+  text-align: center;
+  margin-top: 1em;
+  padding: 0.8em;
+  background: rgba(5, 150, 105, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.submit-btn {
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 0.8em 2em;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: 1em;
+}
+
+.submit-btn:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.submit-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 0.5em;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.contact-info {
+  text-align: center;
+  margin-bottom: 2em;
+  color: #5a6c7d;
+  line-height: 1.6;
+}
+
+.contact-info p {
+  margin-bottom: 0.5em;
+}
+
+.contact-info a {
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+/* Contact responsive styles */
+@media (max-width: 920px) {
+  .contact_form {
+    padding: 1.5em;
+    margin: 0 1em;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.7em 0.9em;
+    font-size: 0.95em;
+  }
+
+  .submit-btn {
+    padding: 0.7em 1.5em;
+    font-size: 0.95em;
+  }
+
+  /* Mobile styles for direct form elements */
+  form input {
+    width: 85%;
+    height: 38px;
+    padding: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    margin-top: 8px;
+  }
+
+  form textarea {
+    width: 85%;
+    height: 90px;
+    padding: 8px;
+    font-size: 0.95rem;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  form > button {
+    width: 50%;
+    height: 55px;
+    font-size: medium;
+    padding: 8px;
+  }
+
+  form input::placeholder,
+  form textarea::placeholder {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact_form {
+    padding: 1.2em;
+    margin: 0 0.5em;
+  }
+
+  .contact_form h2 {
+    font-size: 1.3em;
+    margin-bottom: 1.2em;
+  }
+
+  .form-group {
+    margin-bottom: 1.2em;
+  }
+
+  .form-group label {
+    font-size: 0.9em;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.6em 0.8em;
+    font-size: 0.9em;
+  }
+
+  .form-group textarea {
+    min-height: 100px;
+  }
+
+  .submit-btn {
+    padding: 0.6em 1.2em;
+    font-size: 0.9em;
+  }
+
+  /* Mobile styles for direct form elements - smaller screens */
+  form input {
+    width: 90%;
+    height: 35px;
+    padding: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    margin-top: 6px;
+    box-shadow: 0px 3px 3px rgba(0,0,0, 0.4);
+  }
+
+  form textarea {
+    width: 90%;
+    height: 80px;
+    padding: 6px;
+    font-size: 0.9rem;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    box-shadow: 0px 3px 3px rgba(0,0,0, 0.4);
+  }
+
+  form > button {
+    width: 60%;
+    height: 50px;
+    font-size: medium;
+    padding: 6px;
+    box-shadow: 0px 6px 6px rgba(0,0,0, 0.4);
+  }
+
+  form input::placeholder,
+  form textarea::placeholder {
+    font-size: 0.9rem;
+  }
+
+  .form_sub_status {
+    font-size: 1rem;
+  }
+
+  .character-counter {
+    font-size: 0.8em;
+  }
+
+  .form-error-message {
+    font-size: 0.8em;
+  }
+}

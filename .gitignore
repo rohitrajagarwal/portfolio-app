@@ -1,2 +1,8 @@
 .DS_Store
 server/sql_config/sql_connection.config
+
+# Database backup files
+*.sql
+portfolio_app_backup_*.sql
+portfolio_app_structure_*.sql
+portfolio_app_data_*.sql

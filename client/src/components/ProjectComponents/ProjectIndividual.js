@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import '../../styles/projects.css';
 
 function linkifyText(text) {
   if (!text) return null;
@@ -24,36 +25,42 @@ function linkifyText(text) {
 }
 
 function ProjectIndividual({ content }) {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const toggleDescription = () => {
+        setIsExpanded(prev => !prev);
+    };
+
+    if (!content) {
+        return <div></div>;
+    }
+
     return (
-        content ? (
-            content.id % 2 === 1 ? (
-                <div className="main-content-body visible">
-                    <div className="projectimg">
-                        <img src={"images/projects/" + content.image_name} alt={content.image_name} />
-                    </div>
-                    <div className="sub-component-large" id={content.id}>
-                        <div className="project_details">
-                            <h2>{content.short_desc}</h2>
-                            <h3>Project Team: {content.team_members}</h3>
+        <div className="main-content-body visible">
+            <div className="projectimg">
+                <img src={`images/projects/${content.image_name}`} alt={content.image_name} />
+            </div>
+
+            <div className="sub-component-large">
+                <div className="project_details">
+                    <h2>{content.short_desc}</h2>
+                    <h3>Project Team: {content.team_members}</h3>
+                    <div className="project-description-section">
+                        <h4 onClick={toggleDescription} className="project-description-toggle">
+                            Description
+                            <img 
+                                src="images/expand-arrow.png" 
+                                alt="Expand" 
+                                className={`course-expand-img ${isExpanded ? 'expanded' : ''}`}
+                            />
+                        </h4>
+                        <div className={`project-description-container ${isExpanded ? 'expanded' : ''}`}>
                             <p>{linkifyText(content.long_desc)}</p>
                         </div>
                     </div>
                 </div>
-            ) : (
-                <div className="main-content-body visible">
-                    <div className="sub-component-large" id={content.id}>
-                        <div className="project_details">
-                            <h2>{content.short_desc}</h2>
-                            <h3>Project Team: {content.team_members}</h3>
-                            <p>{linkifyText(content.long_desc)}</p>
-                        </div>
-                    </div>
-                    <div className="projectimg">
-                        <img src={"images/projects/" + content.image_name} alt={content.image_name} />
-                    </div>
-                </div>
-            )
-        ) : <div></div>
+            </div>
+        </div>
     );
 }
 
