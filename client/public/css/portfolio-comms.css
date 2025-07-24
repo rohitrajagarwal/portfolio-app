@@ -230,7 +230,7 @@ p {
 .course-expand-img{
   width: 20px;
   height: 20px;
-  rotate: 180deg;
+  transform: rotate(180deg);
 }
   
 @media (max-width: 920px) {
@@ -392,5 +392,5 @@ p {
 .course-expand-img{
   width: 20px;
   height: 20px;
-  rotate: 180deg;
+  transform: rotate(180deg);
 }

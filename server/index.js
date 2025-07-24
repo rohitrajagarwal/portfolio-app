@@ -102,8 +102,8 @@ const pool = mariadb.createPool({
     connectionLimit: parseInt(config.CONN_LIMIT) || 10,
     acquireTimeout: parseInt(config.ACQ_TIMEOUT) || 60000,
     timeout: parseInt(config.TIMEOUT) || 60000,
-    allowPublicKeyRetrieval: config.ALLOW_PK_RETREIVAL === 'true',
-    ssl: config.SSL === 'true' ? true : false
+    allowPublicKeyRetrieval: config.ALLOW_PK_RETRIEVAL === 'true',
+    ssl: config.SSL === 'true'
 });
 
 app.get('/api/home', (req, res) => {
