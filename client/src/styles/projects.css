@@ -146,7 +146,7 @@
 .project-description-container.expanded {
   max-height: 1000px;
   opacity: 1;
-  width:100%;
+  width: 100%;
 }
 
 /* Show project description toggle only on mobile */
