@@ -3,7 +3,7 @@ import MenuComponent from '../MenuComponent';
 import FooterComponent from '../FooterComponent';
 import EduHistory from './EduHistory.js';
 
-function EduContainer({  }) {
+function EduContainer() {
 
     const [content, setContent] = React.useState('');
 

@@ -38,7 +38,7 @@ function ProjectIndividual({ content }) {
     return (
         <div className="main-content-body visible">
             <div className="projectimg">
-                <img src={`images/projects/${content.image_name}`} alt={content.image_name} />
+                <img src={`images/projects/${content.image_name}`} alt={content.short_desc} />
             </div>
 
             <div className="sub-component-large">
