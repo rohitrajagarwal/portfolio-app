@@ -1,7 +1,7 @@
 # Portfolio App
 A modern, full-stack personal portfolio web application to showcase projects, skills, and professional background. Built using **React**, **Node.js**, **MySQL**, and **Nginx**, with HTTPS support via SSL.
 
-## Live Site: [My Portfolio](https://yourdomain.com)  
+## Live Site: [My Portfolio](https://rohitrajagarwal.com)  
 
 ## Tech Stack
 
