@@ -42,16 +42,31 @@ function EduHistory({content}) {
                       <p>{element.location}</p>
                       <p>{element.start} - {element.end}</p>
                       
+                      {/* GPA and Percentage section */}
+                      <div className="academic-performance">
+                        {element.gpa && (
+                          <p className="gpa-display">
+                            <strong>GPA: </strong>
+                            <span className="performance-value">{element.gpa.toFixed(2)}</span>
+                          </p>
+                        )}
+                        {element.percentage && (
+                          <p className="percentage-display">
+                            <strong>Percentage: </strong>
+                            <span className="performance-value">{element.percentage.toFixed(1)}%</span>
+                          </p>
+                        )}
+                      </div>
+                      
                       {/* Course tags section */}
                       {element.courses && element.courses.length > 0 && (
                         <div className="course-tags-section">  
                           <h4 onClick={() => toggleCourseSection(index)}>
                             Courses
-                            <img 
-                              src="images/expand-arrow.png" 
-                              alt="Expand" 
-                              className={`course-expand-img ${isExpanded ? 'expanded' : ''}`} 
-                              id="expand-arrow"
+                            <img
+                              src="images/expand-arrow.png"
+                              alt="Expand"
+                              className={`course-expand-img ${isExpanded ? 'expanded' : ''}`}
                             />
                           </h4>
                           <div className={`course-tags-container ${isExpanded ? 'expanded' : ''}`}>
@@ -59,7 +74,6 @@ function EduHistory({content}) {
                               <span 
                                 key={course.course_id} 
                                 className="course-tag"
-                                title={course.course_description ? `${course.course_description}\n\nSkills: ${course.course_skills.join(', ')}` : `Skills: ${course.course_skills.join(', ')}`}
                               >
                                 {course.course_title}
                               </span>

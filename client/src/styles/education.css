@@ -32,6 +32,26 @@
   margin-bottom: 1em;
 }
 
+/* Academic Performance Styles */
+.academic-performance {
+  margin: 1em 0;
+  padding: 0.8em;
+  background: rgba(194, 169, 139, 0.1);
+  border-radius: 8px;
+}
+
+.gpa-display, .percentage-display {
+  margin: 0.3em 0;
+  color: #425766;
+  font-size: 0.95em;
+}
+
+.performance-value {
+  color: #c47514;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
 .course-tags-section {
   margin-top: 1em;
 }
@@ -118,6 +138,7 @@
   font-size: 0.95em;
 }
 
+/* Legacy image-based expand arrow */
 .course-expand-img {
   width: 20px;
   height: 20px;
@@ -165,6 +186,14 @@
     font-size: 0.8em;
     padding: 0.25em 0.7em;
   }
+
+  .academic-performance {
+    padding: 0.6em;
+  }
+
+  .gpa-display, .percentage-display {
+    font-size: 0.9em;
+  }
 }
 
 @media (max-width: 600px) {
@@ -188,5 +217,17 @@
   .course-tag {
     font-size: 0.75em;
     padding: 0.2em 0.6em;
+  }
+
+  .academic-performance {
+    padding: 0.5em;
+  }
+
+  .gpa-display, .percentage-display {
+    font-size: 0.85em;
+  }
+
+  .performance-value {
+    font-size: 1em;
   }
 }

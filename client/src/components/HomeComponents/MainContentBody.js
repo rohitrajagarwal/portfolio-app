@@ -7,9 +7,14 @@ function MainContentBody({ index, content }) {
   useEffect(() => {
     if (ref.current) {
       // Add sequential delay based on index (500ms between each section)
-      setTimeout(() => {
-        ref.current.classList.add('visible');
+      const timer = setTimeout(() => {
+        if (ref.current) {
+          ref.current.classList.add('visible');
+        }
       }, index * 500);
+
+      // Cleanup timeout on unmount
+      return () => clearTimeout(timer);
     }
   }, [index]);
 

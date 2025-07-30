@@ -171,73 +171,152 @@ app.get('/api/home', (req, res) => {
                     }
     res.json(jsonData);
 });
-app.get('/api/education', (req, res) => {
-    const jsonData = {
-      "education": [
-         {
-            "degree": "Master of Science in Information Systems",
-            "institution": "Santa Clara University",
-            "location": "Santa Clara, CA",
-            "start": "January 2025",
-            "end": "present",
-            "courses": [
-               { "course_id": 1, 
-                 "course_title": "Information Systems Strategy and Management",
-                 "course_skills": ["Strategic Planning", "IT Management", "Business Analysis"]},
-               { "course_id": 2, 
-                 "course_title": "Object Oriented Programming with Java", 
-                 "course_skills": ["Java", "OOP Principles", "Software Development", "JavaFX"]},
-               { "course_id": 3, 
-                 "course_title": "Cloud Computing Architecture", 
-                 "course_skills": ["Cloud Architecture", "AWS", "Azure", "Google Cloud"]},
-               { "course_id": 4, 
-                 "course_title": "Database Management Systems", 
-                 "course_skills": ["SQL", "Database Design", "Data Modeling", "MySQL"]},
-               { "course_id": 5, 
-                 "course_title": "Database Management Systems Analysis and Design", 
-                 "course_skills": ["Database Design", "Entity Relationship Diagram","Normalization"]},
-               { "course_id": 6, 
-                 "course_title": "Information Systems Analysis and Design", 
-                 "course_skills": ["Systems Analysis", "Design Thinking", "Agile Methodologies", "UML Diagrams"]},
-            ]
-         },
-         {
-            "degree": "Bachelor of Engineering in Information Science",
-            "institution": "Bangalore University",
-            "location": "Bangalore, India",
-            "start": "August 2009",
-            "end": "July 2013",
-            "courses": [
-               { "course_id": 1, 
-                 "course_title": "Computer Networks",
-                 "course_description": "This course covers the fundamentals of computer networks, including protocols, architecture, and security.",
-                 "course_skills": ["Networking", "TCP/IP", "Network Security", "OSI Model"]},
-               { "course_id": 2, 
-                 "course_title": "Object Oriented Programming with Java", 
-                 "course_description": "This course introduces the concepts of object-oriented programming using Java.",
-                 "course_skills": ["Java", "OOP Principles", "Software Development", "JavaFX"]},
-               { "course_id": 3, 
-                 "course_title": "Computer Architecture and Organization", 
-                 "course_description": "This course explores the principles of computer architecture and organization.",
-                 "course_skills": ["Computer Architecture", "Assembly Language", "Microprocessors", "Memory Management"]},
-               { "course_id": 4, 
-                 "course_title": "Database Management Systems", 
-                 "course_description": "This course covers the fundamentals of database management systems and SQL.",
-                 "course_skills": ["SQL", "Database Design", "Data Modeling", "MySQL"]},
-               { "course_id": 5, 
-                 "course_title": "Database Management Systems Analysis and Design", 
-                 "course_description": "This course focuses on the analysis and design of database systems.",
-                 "course_skills": ["Database Design", "Entity Relationship Diagram","Normalization"]},
-               { "course_id": 6, 
-                 "course_title": "Programming in C", 
-                 "course_description": "This course covers the fundamentals of programming in C.",
-                 "course_skills": ["C Programming", "Data Structures", "Algorithms", "Memory Management"]},
-            ]
-         }
-      ]
+
+// Helper function to format dates
+const formatDate = (dateString, isEndDate = false) => {
+    if (!dateString) return null;
+    
+    const date = new Date(dateString);
+    const now = new Date();
+    
+    // If it's an end date and the date is in the future, return "Present"
+    if (isEndDate && date > now) {
+        return "Present";
     }
-    res.json(jsonData);
+    
+    // Format as "Month, Year"
+    const options = { year: 'numeric', month: 'long' };
+    return date.toLocaleDateString('en-US', options);
+};
+
+app.get('/api/education', (req, res) => {
+
+
+    /*
+    from the table definitions below: 
+    CREATE TABLE education_history(
+	edu_id INT AUTO_INCREMENT,
+	edu_institution VARCHAR(100),
+	edu_start DATE NOT NULL,
+	edu_end DATE NOT NULL,
+	edu_degree VARCHAR(100),
+	edu_location VARCHAR(50),
+	PRIMARY KEY (edu_id)
+);
+
+CREATE TABLE courses (
+	course_id VARCHAR(10) NOT NULL, 
+	edu_id INT NOT NULL,
+	course_title VARCHAR(60) NOT NULL,
+	course_desc VARCHAR(1000) NOT NULL,
+	scores FLOAT NOT NULL,
+	units INT NOT NULL,
+	PRIMARY KEY (course_id, edu_id),
+	FOREIGN KEY (edu_id) REFERENCES education_history(edu_id) ON DELETE CASCADE
+);
+
+    write the code to fetch education history along with a list of courses and convert it to JSON object format same as jsonData below:
+    */
+
+    pool.getConnection() 
+    .then(conn => {
+        const query = `            SELECT 
+                eh.edu_id, eh.edu_institution, eh.edu_start, eh.edu_end, eh.edu_degree, eh.edu_location,
+                c.course_id, c.course_title, c.course_desc, c.scores, c.units, c.show_in_ui,
+                CASE 
+                    WHEN c.units < 10 THEN c.scores 
+                    ELSE NULL 
+                END as gpa,
+                CASE 
+                    WHEN c.units >= 10 THEN c.scores 
+                    ELSE NULL 
+                END as percentage
+            FROM education_history eh
+            LEFT JOIN courses c ON eh.edu_id = c.edu_id
+            ORDER BY eh.edu_id, c.course_id;`;  
+        return conn.query(query).then(results => {
+            conn.end(); // Close connection after query
+            return results;
+        });
+    })
+    .then(results => {
+        const educationData = [];
+        let currentEdu = null;  
+        results.forEach(row => {
+            if (!currentEdu || currentEdu.edu_id !== row.edu_id) {
+                if (currentEdu) {
+                    educationData.push(currentEdu);
+                }
+                currentEdu = {
+                    edu_id: row.edu_id,
+                    edu_institution: row.edu_institution,
+                    edu_start: row.edu_start,
+                    edu_end: row.edu_end,
+                    edu_degree: row.edu_degree,
+                    edu_location: row.edu_location,
+                    courses: []
+                };
+            }
+            if (row.course_id) {
+                currentEdu.courses.push({
+                    course_id: row.course_id,
+                    course_title: row.course_title,
+                    course_desc: row.course_desc,
+                    scores: row.scores,
+                    units: row.units,
+                    show_in_ui: row.show_in_ui
+                });
+            }
+        });
+        if (currentEdu) {
+            educationData.push(currentEdu);
+        }   
+        // Convert to JSON format
+        const jsonData = {
+            "education": educationData.map(edu => {
+                // Calculate weighted GPA (for courses with units < 10 and scores > 0)
+                const gpaCourses = edu.courses.filter(course => course.units < 10 && course.scores > 0);
+                const avgGPA = gpaCourses.length > 0 
+                    ? gpaCourses.reduce((sum, course) => sum + (course.scores * course.units), 0) / 
+                      gpaCourses.reduce((sum, course) => sum + course.units, 0)
+                    : null;
+                
+                // Calculate weighted average percentage (for courses with units >= 10 and scores > 0)
+                const percentageCourses = edu.courses.filter(course => course.units >= 10 && course.scores > 0);
+                const avgPercentage = percentageCourses.length > 0 
+                    ? (percentageCourses.reduce((sum, course) => sum + course.scores, 0) / 
+                       percentageCourses.reduce((sum, course) => sum + course.units, 0)) * 100
+                    : null;
+                
+                return {
+                    "degree": edu.edu_degree,
+                    "institution": edu.edu_institution,
+                    "location": edu.edu_location,
+                    "start": formatDate(edu.edu_start),
+                    "end": formatDate(edu.edu_end, true),
+                    "gpa": avgGPA,
+                    "percentage": avgPercentage,
+                    "courses": edu.courses
+                        .filter(course => course.show_in_ui === true || course.show_in_ui === 1)
+                        .map(course => ({
+                            "course_id": course.course_id,
+                            "course_title": course.course_title.replace(/\s+Theory\s*$/i, '').trim(),
+                            "course_desc": course.course_desc,
+                            "scores": course.scores,
+                            "units": course.units
+                        }))
+                };
+            })
+        };
+        
+        res.json(educationData.length > 0 ? jsonData : { education: [] });
+    })
+    .catch(err => {
+        console.error('Error fetching education data:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
 });
+
 
 app.get('/api/project', validatePagination, async (req, res) => {
 
@@ -288,7 +367,8 @@ app.get('/api/project', validatePagination, async (req, res) => {
                 projectMap[row.id].team_members.push(name);
             }
         });
-        // Convert map to array and join team members as comma separated string
+        
+        // Convert map to array
         const projectList = Object.values(projectMap).map(project => {
             return {
                 ...project,
