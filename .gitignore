@@ -1,24 +1,90 @@
-.DS_Store
-server/sql_config/sql_connection.config
+# Portfolio App - Consolidated .gitignore
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Database backup files
+# ===========================================
+# Operating System Files
+# ===========================================
+.DS_Store
+Thumbs.db
+
+# ===========================================
+# Dependencies (Node.js)
+# ===========================================
+node_modules/
+client/node_modules/
+server/node_modules/
+/.pnp
+.pnp.js
+
+# ===========================================
+# Build & Distribution
+# ===========================================
+build/
+dist/
+client/build/
+server/dist/
+*.tgz
+*.tar.gz
+
+# ===========================================
+# Environment Variables
+# ===========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ===========================================
+# Logs
+# ===========================================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+server/npm-debug.log*
+server/yarn-debug.log*
+server/yarn-error.log*
+
+# ===========================================
+# Testing
+# ===========================================
+/coverage
+client/coverage/
+server/coverage/
+
+# ===========================================
+# Database & Configuration
+# ===========================================
+server/sql_config/sql_connection.config
 *.sql
 portfolio_app_backup*.sql
 
-# Containerization related files
+# ===========================================
+# Containerization & Deployment
+# ===========================================
 Dockerfile
+gcp-deployment/docker-compose/docker-compose.yml
+**/docker-compose.yaml
 init-mysql.sh
 run-certbot.sh
-
-server/node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log* 
-
-client/node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log* 
-
 gcp-deployment/
 
+# ===========================================
+# IDE & Editor Files
+# ===========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# ===========================================
+# Temporary Files
+# ===========================================
+*.tmp
+*.temp
+.cache/
