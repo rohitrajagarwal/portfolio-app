@@ -4,11 +4,22 @@ const path = require('path');
 const PORT = 3000;
 const fs = require('fs');
 
-// Serve static files from React build
-app.use(express.static(path.join(__dirname, '../client/build')));
+// CORS middleware for multi-container setup
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'http://localhost');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
+
 app.use(express.json());
 
-const mariadb = require('mariadb');
+const mysql2 = require('mysql2/promise');
 
 // Input validation middleware
 const validateContactForm = (req, res, next) => {
@@ -83,28 +94,49 @@ const validatePagination = (req, res, next) => {
     next();
 };
 
-// Read config file
-const configPath = path.join(__dirname, 'sql_config', 'sql_connection.config');
+// Read database configuration from environment variables
+const config = {
+    DB_HOST: process.env.DB_HOST,
+    DB_USER: process.env.DB_USER,
+    DB_PASSWORD: process.env.DB_PASSWORD,
+    DB_NAME: process.env.DB_NAME,
+    DB_PORT: process.env.DB_PORT,
+    CONN_LIMIT: process.env.CONN_LIMIT,
+    SSL: process.env.SSL === 'true' || process.env.SSL === '1',
+};
 
-const configContent = fs.readFileSync(configPath, 'utf8');
-const config = {};
-configContent.split('\n').forEach(line => {
-    const [key, value] = line.split('=');
-    if (key && value) config[key.trim()] = value.trim();
+// Log configuration (without password for security)
+console.log('Database configuration:', {
+    host: config.DB_HOST,
+    user: config.DB_USER,
+    database: config.DB_NAME,
+    port: config.DB_PORT,
+    connectionLimit: config.CONN_LIMIT,
+    ssl: config.SSL
 });
 
 // Create MySQL connection
-const pool = mariadb.createPool({
+const pool = mysql2.createPool({
     host: config.DB_HOST,
+    port: parseInt(config.DB_PORT) || 3306,
     user: config.DB_USER,
     password: config.DB_PASSWORD,
     database: config.DB_NAME,
     connectionLimit: parseInt(config.CONN_LIMIT) || 10,
-    acquireTimeout: parseInt(config.ACQ_TIMEOUT) || 60000,
-    timeout: parseInt(config.TIMEOUT) || 60000,
-    allowPublicKeyRetrieval: config.ALLOW_PK_RETRIEVAL === 'true',
-    ssl: config.SSL === 'true'
+    ssl: config.SSL === 'true',
+    waitForConnections: true,
+    queueLimit: 0
 });
+
+// Test database connection
+pool.getConnection()
+    .then(conn => {
+        console.log('Database connected successfully');
+        conn.release();
+    })
+    .catch(err => {
+        console.error('Database connection failed:', err);
+    });
 
 app.get('/api/home', (req, res) => {
     const jsonData = {
@@ -235,8 +267,8 @@ CREATE TABLE courses (
             LEFT JOIN courses c ON eh.edu_id = c.edu_id
             ORDER BY eh.edu_id, c.course_id;`;  
         return conn.query(query).then(results => {
-            conn.end(); // Close connection after query
-            return results;
+            conn.release(); // Release connection back to pool
+            return results[0]; // MySQL2 returns [rows, fields], we only need rows
         });
     })
     .then(results => {
@@ -285,7 +317,7 @@ CREATE TABLE courses (
                 const percentageCourses = edu.courses.filter(course => course.units >= 10 && course.scores > 0);
                 const avgPercentage = percentageCourses.length > 0 
                     ? (percentageCourses.reduce((sum, course) => sum + course.scores, 0) / 
-                       percentageCourses.reduce((sum, course) => sum + course.units, 0)) * 100
+                       percentageCourses.length)
                     : null;
                 
                 return {
@@ -347,7 +379,7 @@ app.get('/api/project', validatePagination, async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        const results = await conn.query(optimizedQuery);
+        const [results] = await conn.query(optimizedQuery); // Destructure to get just the rows
 
         // Group results by project
         const projectMap = {};
@@ -380,7 +412,7 @@ app.get('/api/project', validatePagination, async (req, res) => {
         console.error('Database query error:', err);
         res.status(500).json({ error: 'Database query error' });
     } finally {
-        if (conn) conn.end();
+        if (conn) conn.release();
         //pool.end(); // Close the pool when done
     }
 });
@@ -406,16 +438,34 @@ app.post('/api/submit-contact', rateLimitContactForm, validateContactForm, async
         console.error('Error inserting contact form:', err);
         res.status(500).json({ error: 'Error submitting contact form' });
     } finally {
-        if (conn) conn.end();
+        if (conn) conn.release();
     }
 });
 
-// Catch-all handler: send back React's index.html file for client-side routing
-// Only for non-API routes
-app.get(/^(?!\/api).*/, (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+// Health check endpoint for container monitoring
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        service: 'portfolio-backend'
+    });
+});
+
+// Default API handler for unmatched endpoints
+// Redirects to frontend home page
+app.use('/api/*', (req, res) => {
+    console.log(`Unmatched API endpoint: ${req.method} ${req.originalUrl}`);
+    res.redirect(301, process.env.FRONTEND_URL || 'http://localhost');
+});
+
+// Default handler for non-API requests
+// Redirects to frontend home page
+app.use('*', (req, res) => {
+    console.log(`Non-API request redirected: ${req.method} ${req.originalUrl}`);
+    res.redirect(301, process.env.FRONTEND_URL || 'http://localhost');
 });
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+  console.log('API endpoints available at /api/*');
 });

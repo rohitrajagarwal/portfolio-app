@@ -3,6 +3,21 @@ server/sql_config/sql_connection.config
 
 # Database backup files
 *.sql
-portfolio_app_backup_*.sql
-portfolio_app_structure_*.sql
-portfolio_app_data_*.sql
+portfolio_app_backup*.sql
+
+# Containerization related files
+Dockerfile
+init-mysql.sh
+run-certbot.sh
+
+server/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log* 
+
+client/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log* 
+
+gcp-deployment/
