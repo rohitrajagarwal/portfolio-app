@@ -71,6 +71,8 @@ gcp-deployment/docker-compose/docker-compose.yml
 init-mysql.sh
 run-certbot.sh
 gcp-deployment/
+gcp-deployment-local/
+
 
 # ===========================================
 # IDE & Editor Files
