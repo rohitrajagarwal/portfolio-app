@@ -153,10 +153,12 @@ p {
 
 .project_details{
     padding: 20px;
-    text-align: justify;
     border-radius: 10px;
   }
 
+  .project_details > h2{
+    font-weight: normal;
+  }
   .captcha-container {
     margin: 1em 0;
     display: flex;
@@ -290,7 +292,6 @@ p {
     word-wrap: wrap;
     overflow-wrap: break-word;
     /*padding: 20px;*/  
-    text-align: justify;
     border-radius: 10px;
   }
   .projectimg {
