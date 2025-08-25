@@ -317,7 +317,7 @@ CREATE TABLE courses (
                 const percentageCourses = edu.courses.filter(course => course.units >= 10 && course.scores > 0);
                 const totalUnits = percentageCourses.reduce((sum, course) => sum + course.units, 0);
                 const scoreSum = percentageCourses.reduce((sum, course) => sum + (course.scores), 0);
-                const percentage = totalUnits > 0 ? (scoreSum / totalUnits) : null;
+                const percentage = totalUnits > 0 ? (scoreSum*100 / totalUnits) : null;
                 console.log("Percentage:", percentage);
                 console.log("Total Score:", scoreSum);
                 console.log("Total Units:", totalUnits);
