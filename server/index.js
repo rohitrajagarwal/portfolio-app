@@ -313,13 +313,15 @@ CREATE TABLE courses (
                       gpaCourses.reduce((sum, course) => sum + course.units, 0)
                     : null;
                 
-                // Calculate weighted average percentage (for courses with units >= 10 and scores > 0)
+                //calculate percentage based on the course.scores and units where units are greater than 10
                 const percentageCourses = edu.courses.filter(course => course.units >= 10 && course.scores > 0);
-                const avgPercentage = percentageCourses.length > 0 
-                    ? (percentageCourses.reduce((sum, course) => sum + course.scores, 0) / 
-                       percentageCourses.length)
-                    : null;
-                
+                const totalUnits = percentageCourses.reduce((sum, course) => sum + course.units, 0);
+                const scoreSum = percentageCourses.reduce((sum, course) => sum + (course.scores), 0);
+                const percentage = totalUnits > 0 ? (scoreSum / totalUnits) : null;
+                console.log("Percentage:", percentage);
+                console.log("Total Score:", scoreSum);
+                console.log("Total Units:", totalUnits);
+
                 return {
                     "degree": edu.edu_degree,
                     "institution": edu.edu_institution,
@@ -327,7 +329,7 @@ CREATE TABLE courses (
                     "start": formatDate(edu.edu_start),
                     "end": formatDate(edu.edu_end, true),
                     "gpa": avgGPA,
-                    "percentage": avgPercentage,
+                    "percentage": percentage,
                     "courses": edu.courses
                         .filter(course => course.show_in_ui === true || course.show_in_ui === 1)
                         .map(course => ({
