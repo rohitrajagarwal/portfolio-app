@@ -374,7 +374,7 @@ app.get('/api/project', validatePagination, async (req, res) => {
         JOIN images i ON p.project_image_id = i.image_id
         LEFT JOIN project_team pt ON p.project_id = pt.project_id
         LEFT JOIN user u ON pt.team_member_id = u.user_id
-        ORDER BY p.project_id DESC
+        ORDER BY p.project_id ASC
     `;
     // to be implemented when pagination support is added. 
     //    LIMIT ${pageSize} OFFSET ${startIndex} 
