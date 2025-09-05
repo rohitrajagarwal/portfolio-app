@@ -355,10 +355,10 @@ CREATE TABLE courses (
 app.get('/api/project', validatePagination, async (req, res) => {
 
     // looks for page_number in the query string. if not found set default to 1. 
-    const pageNumber = parseInt(req.query.page_number) || 1;
-    const pageSize = 10; // Number of items per page
-    const startIndex = (pageNumber - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
+    // const pageNumber = parseInt(req.query.page_number) || 1;
+    // const pageSize = 10; // Number of items per page
+    // const startIndex = (pageNumber - 1) * pageSize;
+    // const endIndex = startIndex + pageSize;
    
     // Optimized query: fetch all projects and their team members in one go
     const optimizedQuery = `
@@ -375,8 +375,10 @@ app.get('/api/project', validatePagination, async (req, res) => {
         LEFT JOIN project_team pt ON p.project_id = pt.project_id
         LEFT JOIN user u ON pt.team_member_id = u.user_id
         ORDER BY p.project_id DESC
-        LIMIT ${pageSize} OFFSET ${startIndex} 
     `;
+    // to be implemented when pagination support is added. 
+    //    LIMIT ${pageSize} OFFSET ${startIndex} 
+    //`;
 
     let conn;
     try {
