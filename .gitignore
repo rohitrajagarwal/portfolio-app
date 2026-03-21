@@ -90,3 +90,22 @@ gcp-deployment-local/
 *.tmp
 *.temp
 .cache/
+
+# ===========================================
+# Local Development & Docker
+# ===========================================
+docker-compose.local.yml
+.env.local.example
+sample_blog_data.sql
+LOCAL_TESTING.md
+LOCAL_TESTING_READY.md
+react.log
+
+# Local Docker volumes & data
+mysql_data/
+.colima/
+.docker/
+
+# Node processes
+*.pid
+

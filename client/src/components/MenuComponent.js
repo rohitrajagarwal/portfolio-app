@@ -6,19 +6,27 @@ function MenuComponent({ currentPage }) {
   const [showQuote, setShowQuote] = useState(false);
   const [quote, setQuote] = useState('');
 
-  const raw_quotes = "The greatest glory in living lies not in never falling, but in rising every time we fall. -Nelson Mandela\n\
-                        The way to get started is to quit talking and begin doing. -Walt Disney \n\
-                        Your time is limited, so don't waste it living someone else's life. Don't be trapped by dogma – which is living with the results of other people's thinking. -Steve Jobs \n\
-                        If life were predictable it would cease to be life, and be without flavor. -Eleanor Roosevelt\n\
-                        If you look at what you have in life, you'll always have more. If you look at what you don't have in life, you'll never have enough. -Oprah Winfrey\n\
-                        If you set your goals ridiculously high and it's a failure, you will fail above everyone else's success. -James Cameron\n\
-                        Life is what happens when you're busy making other plans. -John Lennon \n\
-                        "
-  //write a function to convert the raw_quotes string into an array of objects
-  const quotes = raw_quotes.split('\n').filter(quote => quote.trim() !== '').map(quote => {
-    const [text, author] = quote.split(' -');
-    return { text: text.trim(), author: author ? author.trim() : '' };
-  });
+  // Hilarious dad jokes instead of quotes
+  const dadJokes = [
+    { text: "Why don't scientists trust atoms? Because they make up everything!" },
+    { text: "I used to hate facial hair, but then it grew on me." },
+    { text: "Why did the scarecrow win an award? He was outstanding in his field!" },
+    { text: "What do you call a fake noodle? An impasta!" },
+    { text: "Why don't eggs tell jokes? They'd crack each other up!" },
+    { text: "I'm reading a book about anti-gravity. It's impossible to put down!" },
+    { text: "Why did the cookie go to the doctor? Because it felt crumbly!" },
+    { text: "What did the ocean say to the beach? Nothing, it just waved." },
+    { text: "Why don't skeletons fight each other? They don't have the guts!" },
+    { text: "I told my computer I needed a break, and now it won't stop sending me Kit-Kat ads." },
+    { text: "What's the best thing about Switzerland? I don't know, but their flag is a big plus." },
+    { text: "Why did the math book look so sad? Because it had too many problems!" },
+    { text: "I'm afraid for the calendar. Its days are numbered." },
+    { text: "What did one wall say to the other wall? I'll meet you at the corner!" },
+    { text: "Why don't we ever tell secrets on a farm? Because the potatoes have eyes, the corn has ears, and the beans stalk!" }
+  ];
+
+  // Pick a random dad joke (no author needed)
+  const quotes = dadJokes;
 
   useEffect(() => {
     // Quote pop-up logic
@@ -51,9 +59,8 @@ function MenuComponent({ currentPage }) {
             >
               &#10005;
             </button>
-            <div className="quote-popup-icon">&#10077;</div>
+            <div className="quote-popup-icon">😄</div>
             <div className="quote-popup-text">{quote.text}</div>
-            <div className="quote-popup-author">— {quote.author}</div>
           </div>
         </div>
       )}
@@ -86,6 +93,13 @@ function MenuComponent({ currentPage }) {
                 :
                 <Link to="/contact">
                     <div className="btn">Contact</div>
+                </Link>
+            }
+            {currentPage === 'blogs' ?
+                <div className="active-indicator">Blogs</div>
+                :
+                <Link to="/blogs">
+                    <div className="btn">Blogs</div>
                 </Link>
             }
         </div>

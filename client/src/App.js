@@ -6,6 +6,8 @@ import { Routes, Route } from 'react-router-dom';
 import ProjectMain from './components/ProjectComponents/ProjectMain.js';
 import ContactMain from './components/ContactComponents/ContactMain.js';
 import EduContainer from './components/EducationSkillsComponents/EduContainer.js';
+import BlogMain from './components/BlogComponents/BlogMain.js';
+import BlogDetailPage from './components/BlogComponents/BlogDetailPage.js';
 
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
       <Route path="/project" element={<ProjectMain />} />
       <Route path="/contact" element={<ContactMain />} />
       <Route path="/education" element={<EduContainer />} />
+      <Route path="/blogs" element={<BlogMain />} />
+      <Route path="/blog/:blogId" element={<BlogDetailPage />} />
       <Route path="*" element={<IllegalURLMsg />} /> {/* Catch-all for undefined routes */}
     </Routes>
   );

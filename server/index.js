@@ -138,6 +138,97 @@ pool.getConnection()
         console.error('Database connection failed:', err);
     });
 
+app.get('/api/blogs', async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        
+        // Fetch highlight blogs (is_highlight = TRUE)
+        const highlightsQuery = `
+            SELECT 
+                blog_id as id, 
+                blog_title as title, 
+                blog_summary as summary,
+                view_count as views
+            FROM blog
+            WHERE is_highlight = TRUE AND is_published = TRUE
+            ORDER BY published_at DESC
+            LIMIT 3
+        `;
+        
+        // Fetch all published blogs
+        const allBlogsQuery = `
+            SELECT 
+                blog_id as id, 
+                blog_title as title, 
+                blog_summary as summary,
+                view_count as views
+            FROM blog
+            WHERE is_published = TRUE AND 
+                  is_highlight = FALSE
+            ORDER BY published_at DESC
+        `;
+        
+        const [highlights] = await conn.query(highlightsQuery);
+        const [allBlogs] = await conn.query(allBlogsQuery);
+        
+        res.json({
+            highlights: highlights,
+            all_blogs: allBlogs
+        });
+    } catch (err) {
+        console.error('Error fetching blogs:', err);
+        res.status(500).json({ error: 'Error fetching blogs' });
+    } finally {
+        if (conn) conn.release();
+    }
+});
+
+app.get('/api/blogs/:blog_id', async (req, res) => {
+    const { blog_id } = req.params;
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        
+        //check if blog_id is a valid integer
+        if (isNaN(parseInt(blog_id))) {
+            return res.status(400).json({ error: 'Invalid blog ID' });
+        }
+
+        // Increment view count first
+        const updateViewQuery = `UPDATE blog SET view_count = view_count + 1 WHERE blog_id = ?`;
+        await conn.query(updateViewQuery, [blog_id]);
+
+        // Fetch blog content with updated view count
+        const blogQuery = `
+            SELECT 
+                blog_id as id,
+                blog_title as title,
+                blog_summary as summary,
+                blog_content as content,
+                blog_author as author,
+                view_count as views,
+                published_at,
+                created_at
+            FROM blog
+            WHERE blog_id = ? AND is_published = TRUE
+        `;
+        
+        const [blogResults] = await conn.query(blogQuery, [blog_id]);
+        
+        if (blogResults.length === 0) {
+            return res.status(404).json({ error: 'Blog not found' });
+        }
+        
+        res.json(blogResults[0]);
+    } catch (err) {
+        console.error('Error fetching blog:', err);
+        res.status(500).json({ error: 'Error fetching blog' });
+    } finally {
+        if (conn) conn.release();
+    }
+});
+
 app.get('/api/home', (req, res) => {
     const jsonData = {
                     "homepage": [

@@ -10,7 +10,7 @@ function ProjectMain() {
     
       useEffect(() => {
         //console.log("Fetching data from server...");
-        fetch('api/project')
+        fetch('/api/project')
           .then(res => res.json())
           .then(data => {
             //console.log("Data received from server: ", data);

@@ -10,7 +10,7 @@ function EduContainer() {
     useEffect(() => {
         // Any side effects or data fetching can be done here
         
-        fetch('api/education')
+        fetch('/api/education')
             .then(res => res.json())
             .then(data => {
                 console.log("EduContainer.js: API response: ", data);
